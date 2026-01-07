@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: image-converter
+    env: python 3
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
