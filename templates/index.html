@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Converter</title>
+<style>
+body{
+    font-family: Arial;
+    background:#f4f6f8;
+}
+.box{
+    max-width:400px;
+    margin:40px auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+h2{
+    text-align:center;
+}
+input, select, button{
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    font-size:16px;
+}
+button{
+    background:#4caf50;
+    color:white;
+    border:none;
+    border-radius:8px;
+}
+.note{
+    text-align:center;
+    margin-top:10px;
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+    <h2>🖼 Image Converter</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+
+        <select name="type">
+            <option value="jpg_to_png">JPG → PNG</option>
+            <option value="png_to_jpg">PNG → JPG</option>
+            <option value="img_to_pdf">Image → PDF</option>
+        </select>
+
+        <button type="submit">Convert & Download</button>
+    </form>
+
+    <div class="note">
+        Free: 3/day • <a href="/premium">Go Premium</a>
+    </div>
+</div>
+</body>
+</html>
