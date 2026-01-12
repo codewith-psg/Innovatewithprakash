@@ -1,52 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Image Converter</title>
-<style>
-body{
-    font-family: Arial;
-    background:#f4f6f8;
-}
-.box{
-    max-width:400px;
-    margin:40px auto;
-    background:white;
-    padding:20px;
-    border-radius:12px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-}
-h2{
-    text-align:center;
-}
-input, select, button{
-    width:100%;
-    margin-top:10px;
-    padding:12px;
-    font-size:16px;
-}
-button{
-    background:#4caf50;
-    color:white;
-    border:none;
-    border-radius:8px;
-}
-.note{
-    text-align:center;
-    margin-top:10px;
-    color:#555;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Image Converter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
 </head>
-
 <body>
-<div class="box">
-    <h2>🖼 Image Converter</h2>
 
+<header>
+    <a href="/">Home</a>
+    <a href="/premium">Premium</a>
+    <a href="/about">About us</a>
+    <a href="/contact">Contact</a>
+    <a href="/terms">Terms</a>
+    
+</header>
+
+<div class="container">
+    <h1>Online Image Converter</h1>
+    <p>Convert images easily (Free users: 3 per day)</p>
+
+    <!-- IMPORTANT: form fields must match app.py -->
     <form method="POST" enctype="multipart/form-data">
+
+        <label>Select Image</label>
         <input type="file" name="image" required>
 
-        <select name="type">
+        <label>Conversion Type</label>
+        <select name="type" required>
             <option value="jpg_to_png">JPG → PNG</option>
             <option value="png_to_jpg">PNG → JPG</option>
             <option value="img_to_pdf">Image → PDF</option>
@@ -55,9 +37,17 @@ button{
         <button type="submit">Convert & Download</button>
     </form>
 
-    <div class="note">
-        Free: 3/day • <a href="/premium">Go Premium</a>
-    </div>
+    <hr>
+
+    <p style="color:gray;font-size:14px;">
+        Free users can convert only 3 images per day.<br>
+        Upgrade to Premium for unlimited usage.
+    </p>
 </div>
+
+<footer>
+    © 2026 Image Converter
+</footer>
+
 </body>
 </html>

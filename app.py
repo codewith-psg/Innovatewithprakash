@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, send_file, redirect, session
+from flask import Flask, render_template, request, send_file, redirect, session, after_this_request
 import os, sqlite3
 from datetime import date, timedelta
 from PIL import Image
 import razorpay
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -103,35 +104,60 @@ def check_limit(ip):
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+
         user_ip = request.remote_addr
 
         if not check_limit(user_ip):
-            return redirect("/premium")
+            return redirect("/premium?limit=over")
+
+        # ✅ FILE CHECK
+        if "image" not in request.files:
+            return "No file selected"
 
         file = request.files["image"]
-        convert_type = request.form["type"]
+        if file.filename == "":
+            return "Empty filename"
 
-        input_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        convert_type = request.form.get("type")
+
+        # ✅ SAFE filename
+        filename = file.filename.replace(" ", "_")
+        input_path = os.path.join(UPLOAD_FOLDER, filename)
         file.save(input_path)
 
         img = Image.open(input_path)
-        name = file.filename.rsplit(".", 1)[0]
+        name = filename.rsplit(".", 1)[0]
 
-        if convert_type == "jpg_to_png":
-            output_path = os.path.join(OUTPUT_FOLDER, name + ".png")
-            img.save(output_path)
+        output_path = None
 
-        elif convert_type == "png_to_jpg":
-            output_path = os.path.join(OUTPUT_FOLDER, name + ".jpg")
-            img.convert("RGB").save(output_path)
+        try:
+            if convert_type == "jpg_to_png":
+                output_path = os.path.join(OUTPUT_FOLDER, name + ".png")
+                img.save(output_path)
 
-        elif convert_type == "img_to_pdf":
-            output_path = os.path.join(OUTPUT_FOLDER, name + ".pdf")
-            img.convert("RGB").save(output_path, "PDF")
+            elif convert_type == "png_to_jpg":
+                output_path = os.path.join(OUTPUT_FOLDER, name + ".jpg")
+                img.convert("RGB").save(output_path)
+
+            elif convert_type == "img_to_pdf":
+                output_path = os.path.join(OUTPUT_FOLDER, name + ".pdf")
+                img.convert("RGB").save(output_path, "PDF")
+
+            else:
+                return "Invalid conversion type"
+
+        except Exception as e:
+            return f"Image conversion failed: {e}"
+
+        # ✅ FINAL FILE CHECK
+        if not output_path or not os.path.exists(output_path):
+            return "Output file not created"
 
         return send_file(output_path, as_attachment=True)
 
     return render_template("index.html")
+
+      
 
 @app.route("/premium")
 def premium():
@@ -173,4 +199,21 @@ def payment_success():
     session.permanent = True
 
     return redirect("/")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
 
